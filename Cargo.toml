@@ -1,0 +1,16 @@
+[workspace]
+resolver = "3"
+members = [
+    "games/sandbox",
+    "learning/book/ch01/hello_cargo",
+    "learning/book/ch02/guessing_game",
+    "learning/book/ch03/fibonacci",
+    "learning/book/ch03/flow_controls",
+    "learning/book/ch03/functions",
+    "learning/book/ch03/variables_and_types",
+    "learning/book/ch04/ownership",
+    "learning/book/ch04/references_and_borrowing",
+    "learning/book/ch04/slices",
+    "tools/get-dependencies",
+]
+

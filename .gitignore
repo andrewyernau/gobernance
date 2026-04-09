@@ -2,3 +2,4 @@ rustbook/
 *.exe
 *.pdb
 target/
+.obsidian/
