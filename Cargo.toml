@@ -1,7 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
-    "games/sandbox",
+    "games/cubix",
     "learning/book/ch01/hello_cargo",
     "learning/book/ch02/guessing_game",
     "learning/book/ch03/fibonacci",
@@ -10,7 +10,6 @@ members = [
     "learning/book/ch03/variables_and_types",
     "learning/book/ch04/ownership",
     "learning/book/ch04/references_and_borrowing",
-    "learning/book/ch04/slices",
+    "learning/book/ch04/slices", "learning/book/ch05", "learning/book/ch06", "learning/book/ch07", "learning/book/ch08", "learning/book/ch09", "learning/book/ch10", "learning/book/ch11", "learning/book/ch12", "learning/book/ch13", "learning/book/ch14", "learning/book/ch15", "learning/book/ch16", "learning/book/ch17", "learning/book/ch18", "learning/book/ch19", "learning/book/ch20", "learning/book/ch21", "learning/book/ch22",
     "tools/get-dependencies",
 ]
-

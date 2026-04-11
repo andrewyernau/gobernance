@@ -22,4 +22,3 @@ fn first_word(text: &str) -> &str {
 
     text
 }
-
