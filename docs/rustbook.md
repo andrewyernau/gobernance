@@ -33,6 +33,25 @@
 - `https://book.rustlang-es.org/ch04-03-slices`
 - Código: `learning/book/ch04`
 
+### Capítulo 5. Usando Structs para estructurar datos relacionados
+
+- `https://book.rustlang-es.org/ch05-00-structs`
+- `https://book.rustlang-es.org/ch05-01-defining-structs`
+- `https://book.rustlang-es.org/ch05-02-example-structs`
+- `https://book.rustlang-es.org/ch05-03-method-syntax`
+- Código: `learning/book/ch05`
+- Crates:
+  - `learning/book/ch05/defining_structs`
+  - `learning/book/ch05/example_structs`
+  - `learning/book/ch05/method_syntax`
+
+### Capítulo 6. Enums y pattern matching
+
+- `https://book.rustlang-es.org/ch06-00-enums`
+- `https://book.rustlang-es.org/ch06-01-defining-an-enum`
+- `https://book.rustlang-es.org/ch06-02-match`
+- Código: `learning/book/ch06`
+
 ## Nota de uso
 
 La idea no es copiar el libro, sino usarlo como fuente primaria y dejar en este repo:
@@ -40,3 +59,5 @@ La idea no es copiar el libro, sino usarlo como fuente primaria y dejar en este 
 - ejemplos ejecutables;
 - resúmenes cortos orientados a práctica;
 - enlaces hacia las notas del vault.
+
+Punto de entrada del vault: `learning/book/notes/00-mapas/Rust Book - Hub.md`

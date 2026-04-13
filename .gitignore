@@ -3,3 +3,9 @@ rustbook/
 *.pdb
 target/
 .obsidian/
+
+
+
+
+# Ignore Smart Environment folder
+.smart-env

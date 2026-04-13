@@ -24,3 +24,6 @@
 
 La sección de comentarios no tiene crate dedicado porque es transversal y está integrada en el resto de ejemplos.
 
+## Nota en Obsidian
+
+- `../notes/01-capitulos/Capitulo 03 - Conceptos comunes.md`

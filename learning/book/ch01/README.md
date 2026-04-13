@@ -20,3 +20,6 @@
 
 `hello_world` se mantiene fuera del workspace porque su objetivo es mostrar el flujo directo de `rustc`, no el de Cargo.
 
+## Nota en Obsidian
+
+- `../notes/01-capitulos/Capitulo 01 - Empezando.md`

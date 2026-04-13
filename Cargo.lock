@@ -252,11 +252,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "ch05"
+name = "ch05_defining_structs"
 version = "0.1.0"
 
 [[package]]
-name = "ch06"
+name = "ch05_example_structs"
+version = "0.1.0"
+
+[[package]]
+name = "ch05_method_syntax"
+version = "0.1.0"
+
+[[package]]
+name = "ch06_enums"
+version = "0.1.0"
+
+[[package]]
+name = "ch06_matches"
 version = "0.1.0"
 
 [[package]]

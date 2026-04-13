@@ -14,3 +14,6 @@
 - Introducir `Result`, `match` y el ciclo de edición/compilación/ejecución.
 - Ver un programa pequeño con interacción real.
 
+## Nota en Obsidian
+
+- `../notes/01-capitulos/Capitulo 02 - Juego de adivinanzas.md`

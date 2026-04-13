@@ -3,21 +3,23 @@
 Este repositorio queda dividido en dos líneas de trabajo:
 
 - `learning/`: progreso estructurado del libro oficial de Rust.
-- `games/sandbox/`: base del futuro juego tipo sandbox.
+- `games/cubix/`: base del futuro juego tipo sandbox.
 
 ## Estructura
 
-- `learning/book/ch01` a `learning/book/ch04`: ejercicios y ejemplos alineados con `book.rustlang-es.org`.
-- `games/sandbox`: crate inicial del proyecto de juego.
+- `learning/book/`: ejemplos por capítulo y vault de notas enlazadas para Obsidian.
+- `learning/book/notes/`: mapas, capítulos y conceptos conectados con wikilinks.
+- `games/cubix`: crate inicial del proyecto de juego.
 - `tools/get-dependencies`: crate utilitario para comprobar dependencias o hacer pruebas rápidas.
 - `docs/rustbook.md`: mapa de referencia oficial y relación entre capítulos y código.
 
 ## Flujo recomendado
 
 1. Lee el capítulo en `https://book.rustlang-es.org/`.
-2. Revisa el `README.md` del capítulo correspondiente.
-3. Ejecuta el ejemplo Rust asociado.
-4. Registra el aprendizaje en el vault de Obsidian.
+2. Abre `learning/book/notes/00-mapas/Rust Book - Hub.md` en Obsidian.
+3. Entra al capítulo o concepto enlazado.
+4. Ejecuta el ejemplo Rust asociado.
+5. Añade tus propias notas encima de la red existente.
 
 ## Comandos útiles
 
@@ -25,13 +27,13 @@ Este repositorio queda dividido en dos líneas de trabajo:
 cargo check --workspace
 cargo run -p hello_cargo
 cargo run -p guessing_game
-cargo run -p sandbox_game
+cargo run -p cubix
 ```
 
 ## Decisión de organización
 
-Se mantiene el código en `gobernance` y el conocimiento en `VAULT`, pero ambos quedan conectados por documentación espejo:
+Se mantiene el código y el conocimiento dentro del mismo repositorio, pero separados por capas:
 
-- en el repo, para explicar código y objetivos;
-- en Obsidian, para crear memoria, nodos y seguimiento del aprendizaje.
-
+- `learning/book/*`: código ejecutable y ejemplos.
+- `learning/book/notes/*`: conocimiento atómico para Obsidian.
+- `games/cubix/*`: objetivo práctico de largo plazo.

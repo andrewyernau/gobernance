@@ -22,3 +22,6 @@
 
 Después de consolidar este capítulo, el siguiente salto natural es `ch05` con `structs`, porque permiten empezar a modelar datos del juego sandbox de forma idiomática.
 
+## Nota en Obsidian
+
+- `../notes/01-capitulos/Capitulo 04 - Ownership.md`
