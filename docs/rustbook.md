@@ -52,6 +52,26 @@
 - `https://book.rustlang-es.org/ch06-02-match`
 - Código: `learning/book/ch06`
 
+### Capítulo 8. Colecciones comunes
+
+- `https://book.rustlang-es.org/ch08-00-common-collections`
+- `https://book.rustlang-es.org/ch08-01-vectors`
+- `https://book.rustlang-es.org/ch08-02-strings`
+- `https://book.rustlang-es.org/ch08-03-hash-maps`
+- Código: `learning/book/ch08`
+- Crates:
+  - `learning/book/ch08/vectors`
+  - `learning/book/ch08/strings`
+  - `learning/book/ch08/hashmaps`
+
+### Capítulo 9. Manejo de errores
+
+- `https://book.rustlang-es.org/ch09-00-error-handling`
+- `https://book.rustlang-es.org/ch09-01-unrecoverable-errors-with-panic`
+- `https://book.rustlang-es.org/ch09-02-recoverable-errors-with-result`
+- `https://book.rustlang-es.org/ch09-03-to-panic-or-not-to-panic`
+- Código: `learning/book/ch09`
+
 ## Nota de uso
 
 La idea no es copiar el libro, sino usarlo como fuente primaria y dejar en este repo:

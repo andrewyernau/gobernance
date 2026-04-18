@@ -276,10 +276,6 @@ name = "ch07"
 version = "0.1.0"
 
 [[package]]
-name = "ch08"
-version = "0.1.0"
-
-[[package]]
 name = "ch09"
 version = "0.1.0"
 
@@ -936,6 +932,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 
 [[package]]
+name = "hashmaps"
+version = "0.1.0"
+
+[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1207,6 +1207,10 @@ dependencies = [
  "icu_normalizer",
  "icu_properties",
 ]
+
+[[package]]
+name = "iflet"
+version = "0.1.0"
 
 [[package]]
 name = "indexmap"
@@ -2436,6 +2440,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "strings"
+version = "0.1.0"
+
+[[package]]
 name = "subtle"
 version = "2.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2831,6 +2839,10 @@ name = "vcpkg"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
+
+[[package]]
+name = "vectors"
+version = "0.1.0"
 
 [[package]]
 name = "version_check"
