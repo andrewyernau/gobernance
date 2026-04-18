@@ -1,3 +1,7 @@
+use ch07::eat_at_restaurant;
+
 fn main() {
-    println!("Hello, world!");
+    for event in eat_at_restaurant() {
+        println!("{event}");
+    }
 }

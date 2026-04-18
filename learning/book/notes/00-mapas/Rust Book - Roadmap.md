@@ -12,7 +12,8 @@ status: activo
 
 - Fuente principal: `https://book.rustlang-es.org/`
 - Version del libro observada: Rust `1.85.0`, edicion `2024`
-- Progreso actual: [[Capitulo 06 - Enums y match]], hasta `6.2 match`
+- Progreso documentado actual: [[Capitulo 09 - Manejo de errores]], completado
+- Codigo ya presente pero aun no bajado al vault con el mismo detalle: `ch10`
 
 ## Fase 1 - Base del lenguaje
 
@@ -27,9 +28,9 @@ Objetivo: aprender sintaxis, memoria, modelado de datos y control de flujo.
 
 ## Fase 2 - Organizar codigo real
 
-- Capitulo 7: paquetes, crates y modulos
-- Capitulo 8: colecciones comunes
-- Capitulo 9: manejo de errores
+- [[Capitulo 07 - Paquetes, crates y modulos]]
+- [[Capitulo 08 - Colecciones comunes]]
+- [[Capitulo 09 - Manejo de errores]]
 - Capitulo 10: genericos, traits y lifetimes
 
 Objetivo: pasar de ejemplos pequeños a codigo que pueda crecer sin volverse caotico.
@@ -73,6 +74,10 @@ Para un sandbox con Vulkan, los saltos mas importantes son:
 - [[Concepto - Ownership]]
 - [[Concepto - Structs]]
 - [[Concepto - Enums]]
-- futuros capitulos 8, 10, 15, 16, 18 y 20
+- [[Concepto - Modulos]]
+- [[Concepto - Paths y use]]
+- [[Capitulo 08 - Colecciones comunes]]
+- [[Capitulo 09 - Manejo de errores]]
+- futuros capitulos 10, 15, 16, 18 y 20
 
 Sin esa base, el proyecto grafico se vuelve una pelea constante con el compilador.

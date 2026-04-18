@@ -24,6 +24,9 @@ Esta es la nota raiz de `learning/book`. Su funcion no es explicar un tema concr
 - [[Capitulo 04 - Ownership]]
 - [[Capitulo 05 - Structs]]
 - [[Capitulo 06 - Enums y match]]
+- [[Capitulo 07 - Paquetes, crates y modulos]]
+- [[Capitulo 08 - Colecciones comunes]]
+- [[Capitulo 09 - Manejo de errores]]
 
 ## Conceptos base
 
@@ -42,6 +45,15 @@ Esta es la nota raiz de `learning/book`. Su funcion no es explicar un tema concr
 - [[Concepto - Match]]
 - [[Concepto - Result]]
 - [[Concepto - Option]]
+- [[Concepto - if let y let else]]
+- [[Concepto - Paquetes y crates]]
+- [[Concepto - Modulos]]
+- [[Concepto - Paths y use]]
+- [[Concepto - Vec]]
+- [[Concepto - String y str]]
+- [[Concepto - HashMap]]
+- [[Concepto - Panic]]
+- [[Concepto - Propagacion de errores]]
 
 ## Regla de uso
 

@@ -11,12 +11,27 @@
 
 - `enums/`: definicion de enums y modelado de variantes.
 - `matches/`: uso de `match` para comportamiento segun la variante.
+- `iflet/`: `if let`, `if let ... else` y `let...else` para mantener limpio el camino feliz.
+
+## Orden recomendado
+
+1. `enums`
+2. `matches`
+3. `iflet`
 
 ## Utilidad
 
 - Modelar estados cerrados de forma segura.
 - Expresar comportamiento distinto segun el tipo exacto de valor.
 - Preparar el terreno para bloques, eventos, inputs y estados del juego.
+
+## Comandos utiles
+
+```powershell
+cargo run --manifest-path ch06/enums/Cargo.toml
+cargo run --manifest-path ch06/matches/Cargo.toml
+cargo run --manifest-path ch06/iflet/Cargo.toml
+```
 
 ## Nota en Obsidian
 

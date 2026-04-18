@@ -22,7 +22,9 @@ Construir un juego tipo sandbox, estilo Minecraft, usando Rust y Vulkan.
 
 - modelado claro de estado con [[Concepto - Structs]] y [[Concepto - Enums]];
 - control estricto de memoria con [[Concepto - Ownership]] y [[Concepto - Borrowing y referencias]];
-- datos en colecciones y buffers, que apareceran fuerte desde el capitulo 8;
+- organizacion sana del codigo con [[Concepto - Modulos]] y [[Concepto - Paths y use]];
+- datos en colecciones y buffers, que aterrizan en [[Capitulo 08 - Colecciones comunes]];
+- manejo de fallos con [[Concepto - Result]], [[Concepto - Panic]] y [[Concepto - Propagacion de errores]], clave desde [[Capitulo 09 - Manejo de errores]];
 - abstracciones limpias con traits y genericos a partir del capitulo 10;
 - concurrencia para carga de mundo, tareas y streaming en los capitulos 16 y 17.
 
@@ -42,7 +44,12 @@ Algunos tipos que acabaré necesitando:
 - [[Capitulo 04 - Ownership]]
 - [[Capitulo 05 - Structs]]
 - [[Capitulo 06 - Enums y match]]
-- capitulo 7 para modulos
-- capitulo 8 para `Vec` y `HashMap`
+- [[Capitulo 07 - Paquetes, crates y modulos]]
+- [[Capitulo 08 - Colecciones comunes]]
+- [[Capitulo 09 - Manejo de errores]]
 - capitulo 10 para traits y lifetimes
 
+## Siguiente base tecnica inmediata
+
+- Guia objetivo: `https://kylemayes.github.io/vulkanalia/setup/base_code.html`
+- Esa base ya presupone comodidad con `Result`, `?`, ownership y colecciones.

@@ -37,4 +37,5 @@ Usar `_` demasiado pronto y perder parte del beneficio de exhaustividad.
 - [[Capitulo 02 - Juego de adivinanzas]]
 - [[Capitulo 06 - Enums y match]]
 - [[Concepto - Option]]
+- [[Concepto - if let y let else]]
 - [[Concepto - Result]]

@@ -9,7 +9,11 @@ Progreso actual basado en `https://book.rustlang-es.org/`.
 - `ch03`: completado con ejercicio extra de Fibonacci
 - `ch04`: completado
 - `ch05`: completado
-- `ch06`: en progreso hasta `6.2 match`
+- `ch06`: completado
+- `ch07`: completado
+- `ch08`: completado
+- `ch09`: completado
+- `ch10`: completado en codigo; notas del vault pendientes
 
 ## Punto de entrada recomendado
 
@@ -19,8 +23,9 @@ Progreso actual basado en `https://book.rustlang-es.org/`.
 
 ## Carpetas
 
-- `ch01` a `ch06`: capítulos trabajados con ejemplos y notas.
-- `ch07` a `ch22`: capítulos preparados como siguiente ruta de aprendizaje.
+- `ch01` a `ch09`: capítulos ya alineados entre ejemplos y notas.
+- `ch10`: capítulo trabajado en codigo y pendiente de aterrizar al vault con el mismo detalle.
+- `ch11` a `ch22`: capítulos preparados como siguiente ruta de aprendizaje.
 - `notes/`: mapas, conceptos y capítulos enlazados para Obsidian.
 
 ## Cómo usar esta carpeta

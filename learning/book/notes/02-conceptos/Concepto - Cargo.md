@@ -38,4 +38,6 @@ Pensar que Cargo es solo un comando para ejecutar. En realidad organiza el proye
 
 - [[Capitulo 01 - Empezando]]
 - [[Capitulo 02 - Juego de adivinanzas]]
+- [[Capitulo 07 - Paquetes, crates y modulos]]
+- [[Concepto - Paquetes y crates]]
 - [[Proyecto - Sandbox con Vulkan]]

@@ -35,5 +35,7 @@ Abusar de `unwrap()` sin pensar si ese fallo realmente deberia ser un panic.
 ## Enlaces
 
 - [[Capitulo 02 - Juego de adivinanzas]]
+- [[Capitulo 09 - Manejo de errores]]
 - [[Concepto - Match]]
 - [[Concepto - Option]]
+- [[Concepto - Propagacion de errores]]

@@ -22,7 +22,7 @@ La ausencia de valor es parte del dominio. Rust quiere que eso se vea en el tipo
 
 ## Como usarlo
 
-Se combina muy bien con [[Concepto - Match]] o, mas adelante, con `if let`.
+Se combina muy bien con [[Concepto - Match]] y con [[Concepto - if let y let else]].
 
 ## Cuando usarlo
 
@@ -36,4 +36,5 @@ Confundir "no hay valor" con "ha ocurrido un error". Si hubo un fallo real, much
 
 - [[Capitulo 06 - Enums y match]]
 - [[Concepto - Enums]]
+- [[Concepto - if let y let else]]
 - [[Concepto - Result]]
