@@ -196,6 +196,8 @@ impl App {
         create_pipeline(&device, &mut data)?;
         create_framebuffers(&device, &mut data)?;
         create_command_pool(&instance, &device, &mut data)?;
+        create_command_buffers(&device, &mut data)?;
+
         Ok(Self {
             entry,
             instance,
@@ -232,6 +234,78 @@ impl App {
         self.instance.destroy_surface_khr(self.data.surface, None);
         self.instance.destroy_instance(None);
     }
+}
+
+unsafe fn create_command_buffers(device: &Device, data: &mut AppData) -> Result<()> {
+    let allocate_info = vk::CommandBufferAllocateInfo::builder()
+        .command_pool(data.command_pool)
+        .level(vk::CommandBufferLevel::PRIMARY)
+        .command_buffer_count(data.framebuffers.len() as u32);
+
+    // The level parameter specifies if the allocated command buffers are primary or secondary command buffers.
+    //
+    // vk::CommandBufferLevel::PRIMARY – Can be submitted to a queue for execution, but cannot be called from other command buffers.
+    // vk::CommandBufferLevel::SECONDARY – Cannot be submitted directly, but can be called from primary command buffers.
+
+    data.command_buffers = device.allocate_command_buffers(&allocate_info)?;
+
+    // COMMANDS
+    //
+    for (i, command_buffer) in data.command_buffers.iter().enumerate() {
+        let info = vk::CommandBufferBeginInfo::builder();
+
+        device.begin_command_buffer(*command_buffer, &info)?;
+
+        let render_area = vk::Rect2D::builder()
+            .offset(vk::Offset2D::default())
+            .extent(data.swapchain_extent);
+
+        let color_clear_value = vk::ClearValue {
+            color: vk::ClearColorValue {
+                float32: [0.0, 0.0, 0.0, 1.0],
+            },
+        };
+
+        let clear_values = &[color_clear_value];
+        let info = vk::RenderPassBeginInfo::builder()
+            .render_pass(data.render_pass)
+            .framebuffer(data.framebuffers[i])
+            .render_area(render_area)
+            .clear_values(clear_values);
+            .flags(vk::CommandBufferUsageFlags::empty()) // Optional. -> ONE_TIME_SUBMIT.
+            // RENDER_PASS_CONTINUE, SIMULTANEOUS_USE
+            .inheritance_info(&inheritance);             // Optional.
+
+        device.cmd_begin_render_pass(*command_buffer, &info, vk::SubpassContents::INLINE);
+        device.cmd_bind_pipeline(*command_buffer, vk::PipelineBindPoint::GRAPHICS, data.pipeline);
+        device.cmd_draw(*command_buffer, 3, 1, 0, 0);
+        device.cmd_end_render_pass(*command_buffer);
+
+        device.end_command_buffer(*command_buffer)?;
+    }
+
+    Ok(())
+}
+
+unsafe fn create_command_pool(
+    instance: &Instance,
+    device: &Device,
+    data: &mut AppData,
+) -> Result<()> {
+    
+    let indices = QueueFamilyIndices::get(instance, data, data.physical_device)?;
+
+    let info = vk::CommandPoolCreateInfo::builder()
+        .flags(vk::CommandPoolCreateFlags::empty()) // Optional.
+        .queue_family_index(indices.graphics);
+
+    // There are three possible flags for command pools:
+
+    // vk::CommandPoolCreateFlags::TRANSIENT – Hint that command buffers are rerecorded with new commands very often (may change memory allocation behavior)
+    // vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER – Allow command buffers to be rerecorded individually, without this flag they all have to be reset together
+    // vk::CommandPoolCreateFlags::PROTECTED – Creates "protected" command buffers which are stored in "protected" memory where Vulkan prevents unauthorized operations from accessing the memory
+
+    Ok(())
 }
 
 unsafe fn create_framebuffers(device: &Device, data: &mut AppData) -> Result<()> {
@@ -680,6 +754,7 @@ struct AppData {
     pipeline: vk::Pipeline,
     framebuffers: Vec<vk::Framebuffer>,
     command_pool: vk::CommandPool,
+    command_buffers: Vec<vk::CommandBuffer>,
 }
 
 #[derive(Clone, Debug)]
