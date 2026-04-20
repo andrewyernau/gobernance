@@ -192,7 +192,10 @@ impl App {
         let device = create_logical_device(&entry, &instance, &mut data)?;
         create_swapchain(window, &instance, &device, &mut data)?;
         create_swapchain_image_views(&device, &mut data)?;
-        create_pipeline(&device, &mut data);
+        create_render_pass(&instance, &device, &mut data)?;
+        create_pipeline(&device, &mut data)?;
+        create_framebuffers(&device, &mut data)?;
+        create_command_pool(&instance, &device, &mut data)?;
         Ok(Self {
             entry,
             instance,
@@ -208,8 +211,14 @@ impl App {
 
     /// Destroys our Vulkan app.
     unsafe fn destroy(&mut self) {
+        self.data
+            .framebuffers
+            .iter()
+            .for_each(|f| self.device.destroy_framebuffer(*f, None));
+        self.device.destroy_pipeline(self.data.pipeline, None);
         self.device
             .destroy_pipeline_layout(self.data.pipeline_layout, None);
+        self.device.destroy_render_pass(self.data.render_pass, None);
         self.data
             .swapchain_image_views
             .iter()
@@ -225,14 +234,97 @@ impl App {
     }
 }
 
+unsafe fn create_framebuffers(device: &Device, data: &mut AppData) -> Result<()> {
+    data.framebuffers = data
+        .swapchain_image_views
+        .iter()
+        .map(|i| {
+            let attachments = &[*i];
+            let create_info = vk::FramebufferCreateInfo::builder()
+                .render_pass(data.render_pass)
+                .attachments(attachments)
+                .width(data.swapchain_extent.width)
+                .height(data.swapchain_extent.height)
+                .layers(1);
+
+            device.create_framebuffer(&create_info, None)
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+
+    Ok(())
+}
+
+unsafe fn create_render_pass(
+    instance: &Instance,
+    device: &Device,
+    data: &mut AppData,
+) -> Result<()> {
+    // Attachments
+
+    let color_attachment = vk::AttachmentDescription::builder()
+        .format(data.swapchain_format)
+        .samples(vk::SampleCountFlags::_1)
+        .load_op(vk::AttachmentLoadOp::CLEAR)
+        .store_op(vk::AttachmentStoreOp::STORE)
+        .stencil_load_op(vk::AttachmentLoadOp::DONT_CARE)
+        .stencil_store_op(vk::AttachmentStoreOp::DONT_CARE)
+        .initial_layout(vk::ImageLayout::UNDEFINED)
+        .final_layout(vk::ImageLayout::PRESENT_SRC_KHR);
+
+    // Subpasses
+
+    let color_attachment_ref = vk::AttachmentReference::builder()
+        .attachment(0)
+        .layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+
+    let color_attachments = &[color_attachment_ref];
+    let subpass = vk::SubpassDescription::builder()
+        .pipeline_bind_point(vk::PipelineBindPoint::GRAPHICS)
+        .color_attachments(color_attachments);
+    // Vulkan may also support compute subpasses in the future, so we have to be explicit about this being a graphics subpass. Then we specify the reference to the color attachment.
+    //
+    // The index of the attachment in this array is directly referenced from the fragment shader with the layout(location = 0) out vec4 outColor directive!
+    //
+    // The following other types of attachments can be referenced by a subpass:
+    //
+    // input_attachments – Attachments that are read from a shader
+    // resolve_attachments – Attachments used for multisampling color attachments
+    // depth_stencil_attachment – Attachment for depth and stencil data
+    // preserve_attachments – Attachments that are not used by this subpass, but for which the data must be preserved
+
+    // Create
+
+    let dependency = vk::SubpassDependency::builder()
+        .src_subpass(vk::SUBPASS_EXTERNAL)
+        .dst_subpass(0)
+        .src_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT)
+        .src_access_mask(vk::AccessFlags::empty())
+        .dst_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT)
+        .dst_access_mask(
+            vk::AccessFlags::COLOR_ATTACHMENT_READ | vk::AccessFlags::COLOR_ATTACHMENT_WRITE,
+        );
+
+    let attachments = &[color_attachment];
+    let subpasses = &[subpass];
+    let dependencies = &[dependency];
+    let info = vk::RenderPassCreateInfo::builder()
+        .attachments(attachments)
+        .subpasses(subpasses)
+        .dependencies(dependencies);
+
+    data.render_pass = device.create_render_pass(&info, None)?;
+
+    Ok(())
+}
+
 unsafe fn create_pipeline(device: &Device, data: &mut AppData) -> Result<()> {
     //STAGES
 
     let vert = include_bytes!("../shaders/vert.spv");
-    let frag = include_bytes!("../shaders/vert.spv");
+    let frag = include_bytes!("../shaders/frag.spv");
 
     let vert_shader_module = create_shader_module(device, &vert[..])?;
-    let frag_shader_module = create_shader_module(device, &vert[..])?;
+    let frag_shader_module = create_shader_module(device, &frag[..])?;
 
     let vert_stage = vk::PipelineShaderStageCreateInfo::builder()
         .stage(vk::ShaderStageFlags::VERTEX)
@@ -256,9 +348,9 @@ unsafe fn create_pipeline(device: &Device, data: &mut AppData) -> Result<()> {
 
     // VIEWPORT STATE
 
-    let viewpoer = vk::Viewport::builder()
-        .x(0, 0)
-        .y(0, 0)
+    let viewport = vk::Viewport::builder()
+        .x(0.0)
+        .y(0.0)
         .width(data.swapchain_extent.width as f32)
         .height(data.swapchain_extent.height as f32)
         .min_depth(0.0)
@@ -318,6 +410,25 @@ unsafe fn create_pipeline(device: &Device, data: &mut AppData) -> Result<()> {
     let layout_info = vk::PipelineLayoutCreateInfo::builder();
 
     data.pipeline_layout = device.create_pipeline_layout(&layout_info, None)?;
+
+    // CREATE
+
+    let stages = &[vert_stage, frag_stage];
+    let info = vk::GraphicsPipelineCreateInfo::builder()
+        .stages(stages)
+        .vertex_input_state(&vertex_input_state)
+        .input_assembly_state(&input_assembly_state)
+        .viewport_state(&viewport_state)
+        .rasterization_state(&rasterization_state)
+        .multisample_state(&multisample_state)
+        .color_blend_state(&color_blend_state)
+        .layout(data.pipeline_layout)
+        .render_pass(data.render_pass)
+        .subpass(0);
+
+    data.pipeline = device
+        .create_graphics_pipelines(vk::PipelineCache::null(), &[info], None)?
+        .0[0];
 
     // CLEANUP
 
@@ -564,7 +675,11 @@ struct AppData {
     swapchain: vk::SwapchainKHR,
     swapchain_images: Vec<vk::Image>,
     swapchain_image_views: Vec<vk::ImageView>,
+    render_pass: vk::RenderPass,
     pipeline_layout: vk::PipelineLayout,
+    pipeline: vk::Pipeline,
+    framebuffers: Vec<vk::Framebuffer>,
+    command_pool: vk::CommandPool,
 }
 
 #[derive(Clone, Debug)]
