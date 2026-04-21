@@ -18,3 +18,5 @@ Convertir la lectura del libro oficial en:
 - El conocimiento duradero vive en `book/notes/`, no solo en los `README.md`.
 
 Punto de entrada: [book/README.md](book/README.md)
+
+Estado actual del renderer Vulkan: [book/notes/00-mapas/Proyecto - Cubix - Triangulo y bootstrap Vulkan.md](book/notes/00-mapas/Proyecto%20-%20Cubix%20-%20Triangulo%20y%20bootstrap%20Vulkan.md)

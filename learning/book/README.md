@@ -20,6 +20,7 @@ Progreso actual basado en `https://book.rustlang-es.org/`.
 - Vault: [notes/00-mapas/Rust Book - Hub.md](notes/00-mapas/Rust%20Book%20-%20Hub.md)
 - Roadmap: [notes/00-mapas/Rust Book - Roadmap.md](notes/00-mapas/Rust%20Book%20-%20Roadmap.md)
 - Proyecto objetivo: [notes/00-mapas/Proyecto - Sandbox con Vulkan.md](notes/00-mapas/Proyecto%20-%20Sandbox%20con%20Vulkan.md)
+- Estado actual del renderer Vulkan: [notes/00-mapas/Proyecto - Cubix - Triangulo y bootstrap Vulkan.md](notes/00-mapas/Proyecto%20-%20Cubix%20-%20Triangulo%20y%20bootstrap%20Vulkan.md)
 
 ## Carpetas
 

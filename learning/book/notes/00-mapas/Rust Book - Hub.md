@@ -15,6 +15,7 @@ Esta es la nota raiz de `learning/book`. Su funcion no es explicar un tema concr
 - [[Rust Book - Roadmap]]
 - [[USAGE]]
 - [[Proyecto - Sandbox con Vulkan]]
+- [[Proyecto - Cubix - Triangulo y bootstrap Vulkan]]
 
 ## Capítulos activos
 

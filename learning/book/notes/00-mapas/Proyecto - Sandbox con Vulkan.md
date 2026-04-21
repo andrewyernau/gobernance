@@ -17,6 +17,15 @@ Construir un juego tipo sandbox, estilo Minecraft, usando Rust y Vulkan.
 
 - `games/cubix`
 - [README del crate actual](../../../../games/cubix/README.md)
+- [[Proyecto - Cubix - Triangulo y bootstrap Vulkan]]
+
+## Estado actual del renderer
+
+- El renderer Vulkan ya muestra un triangulo en pantalla.
+- La base actual cubre el bootstrap fuerte del renderer y la sincronizacion principal.
+- Ya existe recreacion de swapchain ante `OUT_OF_DATE_KHR` y `SUBOPTIMAL_KHR`.
+- Falta todavia cerrar el manejo explicito de `WindowEvent::Resized` como parte del siguiente paso natural.
+- La documentacion detallada de este hito esta en [[Proyecto - Cubix - Triangulo y bootstrap Vulkan]].
 
 ## Lo que esto exige del lenguaje
 
