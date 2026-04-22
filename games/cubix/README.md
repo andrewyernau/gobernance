@@ -260,7 +260,44 @@ Idea base:
 - proyectar a `x, y` de pantalla;
 - lo mas cercano se percibe mas grande.
 
-La intuicion matematica de rotacion y proyeccion sigue siendo correcta y valiosa. Aun asi, al crecer el proyecto conviene apoyarse en matrices `model/view/projection` y no en formulas aisladas repartidas por el codigo. Esa parte deberia acabar concentrada entre `math/`, `game/` y mas adelante el pipeline del renderer.
+La intuicion matematica de rotacion y proyeccion sigue siendo correcta y valiosa. Esa formula no queda descartada: sigue siendo la base conceptual de lo que ocurre al rotar coordenadas y proyectarlas.
+
+Por ejemplo, expresiones como estas:
+
+```text
+x_2 = z_1 * sin(theta) + x_1 * cos(theta)
+z_2 = z_1 * cos(theta) - x_1 * sin(theta)
+```
+
+siguen representando una rotacion real, en este caso sobre el plano `XZ`. El cambio no es que dejen de servir, sino que en una arquitectura mas sana no conviene tener estas formulas sueltas y repetidas por el codigo para cada objeto o bloque.
+
+En la implementacion moderna del proyecto, esa misma idea acabara expresada normalmente mediante:
+
+- matrices `model`, `view` y `projection`;
+- tipos de `cgmath`;
+- transformaciones en el vertex shader;
+- division de perspectiva en espacio homogeneo.
+
+Mentalmente sigue siendo lo mismo:
+
+- primero se rota;
+- despues se cambia al espacio de la camara;
+- despues se proyecta a pantalla.
+
+La diferencia es solo la forma de implementarlo.
+
+En resumen:
+
+- como intuicion matematica, esa formula sigue siendo totalmente valida;
+- como implementacion final del renderer, conviene encapsularla en matrices y shaders.
+
+Ruta recomendada para este proyecto:
+
+1. mantener esa intuicion como fundamento;
+2. representar posicion y orientacion con `Transform` y camara;
+3. construir matrices con `cgmath`;
+4. enviar esas transformaciones al renderer;
+5. dejar que el shader haga la transformacion final de vertices.
 
 ### First cube
 
