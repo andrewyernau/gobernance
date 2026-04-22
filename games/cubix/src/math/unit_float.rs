@@ -47,10 +47,6 @@ impl From<UnitF32> for f32 {
     }
 }
 
-////////
-// TESTS
-////////
-
 #[cfg(test)]
 mod tests {
     use super::*;

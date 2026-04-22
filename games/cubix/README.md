@@ -1,64 +1,248 @@
-# Sandbox Game
+# Cubix
 
-Bootstrap inicial del proyecto de juego estilo sandbox.
+Proyecto de juego estilo voxel en Rust con renderer Vulkan.
 
-## Objetivo
+## Ejecutar el proyecto
 
-Separar el proyecto de juego del material de aprendizaje para que ambos puedan crecer sin mezclarse.
+El comando de PowerShell que se usaba antes sigue siendo valido:
 
-## Enfoque recomendado
+```powershell
+PS D:\CODE\rust\gobernance\games\cubix> $env:RUST_LOG="debug"; cargo run --bin cubix
+```
 
-1. Mundo en memoria antes de pensar en render.
-2. Tipos de datos claros para bloques, coordenadas y chunks.
-3. Bucle de juego simple.
-4. Render y entrada como capa posterior.
+Sigue funcionando porque el binario `cubix` sigue existiendo en `src/main.rs`. La diferencia es que ahora `main.rs` solo delega en `cubix::app::run()`, pero el punto de entrada del binario no ha cambiado.
 
-## Relación con el aprendizaje
+Si no se quieren logs de debug, tambien se puede ejecutar solo:
 
-El juego se beneficiará especialmente de:
+```powershell
+cargo run --bin cubix
+```
 
-- `ch04`: ownership y borrowing para pasar datos sin peleas con el compilador;
-- `ch05`: structs para modelar bloques, chunks y estado del jugador;
-- `ch06`: enums y `match` para tipos de bloque y eventos.
+## Estructura actual
 
-## Nota en Obsidian
+```text
+cubix/
+  assets/
+    fonts/
+    models/
+    textures/
+    ui/
+  shaders/
+  src/
+    app/
+    game/
+    math/
+    renderer/
+      vulkan/
+    world/
+    lib.rs
+    main.rs
+```
 
-- `../../learning/book/notes/00-mapas/Proyecto - Sandbox con Vulkan.md`
+## Patron para futuras implementaciones
+
+La regla principal es esta:
+
+- `app/` coordina la aplicacion.
+- `renderer/` dibuja.
+- `game/` define estado y logica del jugador o entidades.
+- `world/` define bloques, chunks, coordenadas y generacion.
+- `math/` contiene tipos o utilidades matematicas reutilizables.
+- `assets/` guarda recursos externos como texturas, fuentes o modelos.
+- `shaders/` guarda GLSL y SPIR-V del renderer.
+
+El renderer no debe decidir la logica del mundo.  
+El mundo no debe depender de Vulkan para existir.
+
+## Donde poner cada `.rs`
+
+### `src/main.rs`
+
+Debe mantenerse pequeno.
+
+Solo debe arrancar el binario y delegar en `app`.
+
+Ejemplo actual:
+
+```rust
+fn main() -> anyhow::Result<()> {
+    cubix::app::run()
+}
+```
+
+### `src/app/`
+
+Aqui va la orquestacion de alto nivel de la aplicacion.
+
+Usar esta carpeta para:
+
+- crear ventana;
+- inicializar renderer;
+- inicializar `GameState`;
+- conectar input, update y render loop;
+- coordinar subsistemas sin meter detalles internos de cada uno.
+
+Si en el futuro aparece un `App` propio del juego, deberia vivir aqui.
+
+### `src/renderer/`
+
+Aqui va todo lo que sea dibujar o preparar datos para dibujar.
+
+Usar `src/renderer/` para:
+
+- renderer generico;
+- API publica del renderer;
+- codigo comun de render.
+
+Usar `src/renderer/vulkan/` para:
+
+- bootstrap Vulkan;
+- instance, device, swapchain, pipeline, sync;
+- command buffers;
+- recreacion de swapchain;
+- recursos GPU.
+
+Si en el futuro se crean modulos como estos, deberian vivir aqui:
+
+- `camera.rs`
+- `mesh.rs`
+- `texture.rs`
+- `material.rs`
+- `chunk_renderer.rs`
+- `ui_renderer.rs`
+
+Regla practica:
+
+- si algo habla con `vulkanalia`, casi seguro va en `renderer/vulkan/`;
+- si algo convierte mundo en geometria visible, normalmente va en `renderer/` o en el borde entre `world/meshing.rs` y `renderer/`.
+
+### `src/game/`
+
+Aqui va el estado jugable y la logica que no pertenece al mundo estatico.
+
+Usar esta carpeta para:
+
+- `player.rs`
+- `entity.rs`
+- `input.rs`
+- `physics.rs`
+- `state.rs`
+- futura logica de interaccion, inventario o camara de jugador
+
+Este modulo responde a preguntas como:
+
+- que es un jugador;
+- como se mueve;
+- que input tiene activo;
+- que entidades existen;
+- que estado de partida esta cargado.
+
+Si se implementa `Mob`, `Inventory`, `Hotbar`, `RaycastHit` o `InteractionSystem`, este es un sitio razonable para esos `.rs`.
+
+### `src/world/`
+
+Aqui va el modelo del mundo.
+
+Usar esta carpeta para:
+
+- `block.rs`
+- `chunk.rs`
+- `coords.rs`
+- `world.rs`
+- `generation.rs`
+- `meshing.rs`
+
+Este modulo responde a preguntas como:
+
+- que tipos de bloque existen;
+- como se almacena un chunk;
+- como se indexa una posicion;
+- como se cargan o generan chunks;
+- como se obtiene una malla visible a partir de bloques.
+
+Regla importante:
+
+- `Chunk` debe guardar datos del mundo;
+- la malla de un chunk debe ser derivada, no la fuente de verdad.
+
+### `src/math/`
+
+Aqui van tipos pequenos y reutilizables que ayudan a evitar estados invalidos o repeticion de logica matematica.
+
+Usar esta carpeta para:
+
+- tipos como `UnitF32`;
+- angulos;
+- wrappers numericos;
+- helpers geometricos pequeños;
+- conversiones compartidas.
+
+Si una utilidad es puramente matematica y no pertenece de forma clara a `game/` ni a `world/`, este es su sitio.
+
+## Como anadir un archivo nuevo sin romper el patron
+
+### Si es una nueva pieza del dominio
+
+Ejemplos:
+
+- `block_face.rs`
+- `biome.rs`
+- `inventory.rs`
+- `mob.rs`
+
+Entonces:
+
+1. crear el fichero en la carpeta correcta;
+2. declararlo en el `mod.rs` del modulo;
+3. si conviene, reexportarlo desde ese `mod.rs`;
+4. solo reexportarlo tambien en `src/lib.rs` si debe formar parte de la API raiz del crate.
+
+### Si es una nueva pieza del renderer
+
+Ejemplos:
+
+- `texture.rs`
+- `buffer.rs`
+- `descriptor.rs`
+
+Entonces:
+
+1. crear el fichero en `src/renderer/` o `src/renderer/vulkan/`;
+2. declararlo en el `mod.rs` correspondiente;
+3. exponer solo lo necesario.
+
+La idea no es hacer publico todo por defecto.
+
+## Regla de crecimiento
+
+Antes de crear un archivo nuevo, conviene preguntarse:
+
+1. Esto pertenece a aplicacion, renderer, gameplay, mundo o matematicas?
+2. Esto es dato fuente o dato derivado?
+3. Esto depende de Vulkan de verdad, o solo de logica del juego?
+
+Si una pieza puede existir aunque mañana cambie el backend grafico, no deberia ir en `renderer/`.
+
+## Recursos
+
+`assets/` ya esta preparado para crecer:
+
+- `assets/textures/` para texturas de bloques, atlas y UI
+- `assets/ui/` para recursos de interfaz
+- `assets/models/` para modelos externos si mas adelante hacen falta
+- `assets/fonts/` para fuentes
+
+`shaders/` sigue siendo el sitio correcto para shaders.
 
 ## Estado actual
 
-El crate solo deja un punto de entrada estable y una hoja de ruta mínima para crecer sin contaminar `learning/`.
+Ahora mismo el proyecto ya tiene:
 
-## Cosas a trabajar sobre el proyecto
-Claro, esto es muy bare metal y 80's. En la realidad puedo simplificar mucho estos procesos con recursos ya MUY OPTIMIZADOS y con mejores manejos que mi cabeza.
-### 2D Shape
-Rellenar una figura en la pantalla. Dadas 4 coordenadas, con la "y = mx + b" para las 2 primeras lineas, conectamos la "x" izquierda de cada "y" a la "x" derecha de cada "y" y lo mismo para las otras 2 lineas
-### 3D - 2D Shape
-Rotación y proyección. Dado un "player" y un "objeto" situado en un circulo alrededor del "jugador" (en sus 3 coordenadas pero supongamos "X" para la vertical p.e e "Y" para la horizontal).
-Cuando el jugador mira a la izquierda o a la derecha, el objeto se mueve alrededor siguiendo ese círculo, si mira arriba o abajo pasaría lo mismo pero en vertical.
-El resúmen matemático sería:
-r = x\_1/sin(theta\_1), x2 = r\*sin(theta\_1+theta) = r\*sin(theta)\*cos(theta\_1)+ r\*cos(theta)\*sin(theta\_1) <- ESTO ES LO IMPORTATE
-x\_2 = (x\_1\*sin(theta)\*cos(theta\_1))/sin(theta\_1) + (x\_1\*cos(theta)\*sin(theta\_1))/sin(theta\_1) -> x\_2 = z\_1\*sin(theta)+x\_1\*cos(theta)
-z\_2 = r\*cos(theta\_1+theta) = (x\_1)/(sin(theta\_1))\*(cos(theta)\*cos(theta\_1)-sin(theta)\*sin(theta\_1)) -> (cos(theta\_1))/(sin(theta\_1)) = (z\_1)/(x\_1)
-z\_2 =z\_1\*cos(theta)- x\_1\*sin(theta)
+- una app de arranque;
+- un renderer Vulkan modularizado;
+- una base de `game/`;
+- una base de `world/`;
+- una base de `math/`;
+- carpetas de assets listas para ampliarse.
 
-En resumen, intentamos reducir de x,y,z -> x,y usando la proyección (algo más cercano es más "grande"), en resumen es dividir x,y respecto a z
-### First cube
-Usamos unas matemáticas para generar cuatro coordenadas de cada de las seis caras del cubo. Luego, buscamos cual cara de cada par de las caras paralelas del cubo son las más cercanas al jugador y sólamente pintar esas caras cercanas. Eso se le llama "back face coloring", ya que como mucho, es posible ver en un mismo instante 3 caras de las 6 caras existentes.
-Posteriormente subdividir esas caras del cubo que se ven en cubos más pequeños para para poder así pintarlo basado en un mapa de texturas luego rotamos y proyectamos cada esquina de cada usando otras matemáticas y posteriormente usar una función de rellenar la figura para pintar todo (OJO! Esto es diferente si se usan imágenes [habría que igualar el tamaño de los pixeles al tamaño del .png p.e 32x32,16x16...])
-### Collisions
-Para cada eje, p.e "x", vemos si la x\_1 izquierda o la x\_2 derecha del jugador se solapan con la x\_1 o x\_2 del cubo, asi para cada eje, si coincide en al menos una, existe la colision.
-basicamente, cuando el jugador se intenta mover, añadimos el movimiento del jugador y verificamos si hay colisión (si la hay, deshacer el movimiento) [para mejorarlo, mejor no actualizar el movimiento del jugador hasta que no se haya verificado]
-### Chunks (DEMO!)
-Para hacer el mundo infinito, hay que dividir el mundo en un número de chunks. Cuando un jugador cruza un borde de un chunk, movemos los elementos del array de chunks detrás del jugador ahora delante del jugador. Teletransportar a un jugador a un mismo sitio acaba siendo aburrido, hay que aplicar noise, etc... haciendo el mundo diferente [AQUÍ MI ENFOQUE CAMBIA, SI QUIERO NOISE, PERO LA GENERACIÓN DE MUNDO TRATA DE SER MÁS AMBICIOSA -> Aplicar un perlin noise grande para crear [CONTINENTE,OCÉANO], y a posteriori decorar, transiciones, tipo de continente, etc...]
-
-para el perlin usariamos una funcion donde la x,z de un cubo es el input y el output sería el valor. colocaríamos "cesped" en esa "y", y hasta la "y" más baja (y colocar la "bedrock"), la rellenaríamos simplemente con tierra [esto no acabaría siendo válido si se desea un sistema más sofisticado de cuevas, estructuras...]
-Importante que cada vez que colocamos un bloque, estamos comparando también su valor "y" al valor "y" del perln noise output de izquierda a derecha, delante y atrás de esa posición. así sabemos si hay un bloque ahí y entonces el cubo tiene una cara vecina, guardamos eso en el cubo para que el renderer sepa que no hay que pintar caras extra
-
-Crear árboles, estructuras implicaría almacenar en memoria una posición (segun este planteamiento) ya que si nos alejamos y volvemos deberiamos de poder garantizar que siga exactamente ahi (ademas de lo que se construya/se destruya)
-### Construction/Destruction
-La dificultad en sí residiría en saber cuál es el cubo el cual el usuario trata de interactuar (mirar). Gestionado por el renderer. Verificar con ray casting, puede ser buena idea. Pero la idea principal es dibuaj los alrededores del centro de la pantalla, puede ser un cubo lo que miramos, pero verificar las distancias y marcar unicamente el más cercano (Comprobar además cual es la cara del cubo). Recordar actualizar los valores de cada uno de los bloques vecinos (RENDERING INNECESARIO o RECUPERAR RENDER DE UN BLOQUE QUE PREVIAMENTE ESTABA OCULTO)
-### Day/Night
-la idea es oscurecer el cielo y la iluminación global
-### Transparency
-Aquí ejemplos como el agua, cristal... la idea sería para cada valor "y" de cada cuadrado simplemente rellenamos otro valor "y". Esto requiere de mejora, pero es un "hack".
+El siguiente crecimiento sano seria conectar `GameState` con `app`, y despues empezar a bajar mundo real a geometria real.
