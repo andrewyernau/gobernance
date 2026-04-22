@@ -234,7 +234,8 @@ impl App {
 
         let image_in_flight = self.data.images_in_flight[image_index];
         if !image_in_flight.is_null() {
-            self.device.wait_for_fences(&[image_in_flight], true, u64::MAX)?;
+            self.device
+                .wait_for_fences(&[image_in_flight], true, u64::MAX)?;
         }
 
         self.data.images_in_flight[image_index] = in_flight_fence;
@@ -251,11 +252,8 @@ impl App {
 
         self.device.reset_fences(&[in_flight_fence])?;
 
-        self.device.queue_submit(
-            self.data.graphics_queue,
-            &[submit_info],
-            in_flight_fence,
-        )?;
+        self.device
+            .queue_submit(self.data.graphics_queue, &[submit_info], in_flight_fence)?;
 
         let swapchains = &[self.data.swapchain];
         let image_indices = &[image_index as u32];
@@ -264,16 +262,15 @@ impl App {
             .swapchains(swapchains)
             .image_indices(image_indices);
 
-        let swapchain_changed =
-            match self
-                .device
-                .queue_present_khr(self.data.present_queue, &present_info)
-            {
-                Ok(vk::SuccessCode::SUBOPTIMAL_KHR) => true,
-                Ok(_) => false,
-                Err(vk::ErrorCode::OUT_OF_DATE_KHR) => true,
-                Err(error) => return Err(anyhow!(error)),
-            };
+        let swapchain_changed = match self
+            .device
+            .queue_present_khr(self.data.present_queue, &present_info)
+        {
+            Ok(vk::SuccessCode::SUBOPTIMAL_KHR) => true,
+            Ok(_) => false,
+            Err(vk::ErrorCode::OUT_OF_DATE_KHR) => true,
+            Err(error) => return Err(anyhow!(error)),
+        };
 
         if swapchain_changed {
             self.recreate_swapchain(window)?;
@@ -301,6 +298,10 @@ impl App {
         create_framebuffers(&self.device, &mut self.data)?;
         create_command_buffers(&self.device, &mut self.data)?;
         create_swapchain_sync_objects(&self.device, &mut self.data)?;
+
+        self.data
+            .images_in_flight
+            .resize(self.data.swapchain_images.len(), vk::Fence::null());
 
         Ok(())
     }
@@ -360,7 +361,8 @@ impl App {
             .for_each(|s| self.device.destroy_semaphore(*s, None));
 
         self.destroy_swapchain();
-        self.device.destroy_command_pool(self.data.command_pool, None);
+        self.device
+            .destroy_command_pool(self.data.command_pool, None);
         self.device.destroy_device(None);
 
         if VALIDATION_ENABLED {
