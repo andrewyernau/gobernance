@@ -178,7 +178,7 @@ El orden actual importa. No es decorativo.
 9. `create_swapchain_image_views`
    Envuelve cada imagen del swapchain en una vista utilizable por el pipeline.
 10. `create_render_pass`
-    Define como va a usarse el attachment de color.
+	Define como va a usarse el attachment de color.
 11. `create_pipeline`
     Carga shaders, define estados fijos y crea el pipeline grafico.
 12. `create_framebuffers`
@@ -575,11 +575,11 @@ Conclusion practica:
 - mundo y gameplay ya puedes empezarlos;
 - renderer de mundo todavia necesita varios capitulos mas.
 
-## Donde tocar manana segun lo que quieras anadir
+## Donde tocar mañana segun lo que quieras añadir
 
 ### Quiero cambiar el triangulo por otra forma simple
 
-Si sigue siendo algo muy pequeno y provisional, puedes tocar:
+Si sigue siendo algo muy pequeño y provisional, puedes tocar:
 
 - `shader.vert` para cambiar posiciones;
 - `create_command_buffers` para cambiar `cmd_draw` si dibujas mas vertices;
